@@ -2,7 +2,7 @@
 
 # 接入 OmniAgent
 
-OmniAgent 是一个开源的多模型 AI Agent 调度引擎，运行在终端内。内置 **8 种推理范式**（ReAct、Plan-Execute、Reflection、Direct、Novel 及 3 种组合引擎）、**20+ 项内建工具**（文件编辑、AST 分析、Git、MCP、网页抓取）、工程可靠性层（断路器、预算管理器、上下文压缩器），以及 **MCP 生态**（Smithery 注册中心 7000+ 服务器浏览、28 个技能库）。
+OmniAgent 是一个开源的多模型 AI Agent 调度引擎，运行在终端内。内置 **8 种推理范式**（ReAct、Plan-Execute、Reflection、Direct、Novel 及 3 种组合引擎）、**20+ 项内建工具**（文件编辑、AST 分析、Git、MCP、网页抓取）、工程可靠性层（断路器、预算管理器、上下文压缩器），以及 **MCP 生态**（Smithery 注册中心 7000+ 服务器浏览、27 个技能库）。
 
 #### 1. 安装 OmniAgent
 

@@ -2,7 +2,11 @@
 
 # Integrate with OmniAgent
 
-OmniAgent is an open-source, multi-model AI agent scheduling engine that runs in your terminal. It features **8 inference paradigms** (ReAct, Plan-Execute, Reflection, Direct, Novel, and 3 combined engines), **20+ built-in tools** (file editing, AST analysis, Git, MCP, web fetch), engineering reliability layers (Circuit Breaker, Budget Manager, Context Compactor), and a **MCP ecosystem** with Smithery registry browsing (7000+ servers) and a 27-skill library.
+OmniAgent is an open-source, multi-model AI agent scheduling engine that runs in your terminal.
+
+- **GitHub:** <https://github.com/xianyu-sheng/omniagent>
+
+It features **8 inference paradigms** (ReAct, Plan-Execute, Reflection, Direct, Novel, and 3 combined engines), **20+ built-in tools** (file editing, AST analysis, Git, MCP, web fetch), engineering reliability layers (Circuit Breaker, Budget Manager, Context Compactor), and a **MCP ecosystem** with Smithery registry browsing (7000+ servers) and a 27-skill library.
 
 #### 1. Install OmniAgent
 

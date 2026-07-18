@@ -44,9 +44,7 @@ OmniAgent 原生支持 DeepSeek。选择以下两种方式之一配置：
 编辑 `~/.omniagent/credentials.yaml`：
 
 ```yaml
-providers:
-  deepseek:
-    api_key: "sk-xxxxxxxxxxxxxxxx"
+deepseek: "sk-xxxxxxxxxxxxxxxx"
 ```
 
 其中 API Key 在 [DeepSeek 开放平台](https://platform.deepseek.com/api_keys) 获取。

@@ -44,9 +44,7 @@ Choose **DeepSeek** from the provider list, paste your API Key, and select model
 Edit `~/.omniagent/credentials.yaml`:
 
 ```yaml
-providers:
-  deepseek:
-    api_key: "sk-xxxxxxxxxxxxxxxx"
+deepseek: "sk-xxxxxxxxxxxxxxxx"
 ```
 
 Get your API Key from the [DeepSeek Platform](https://platform.deepseek.com/api_keys).

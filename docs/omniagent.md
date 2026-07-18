@@ -2,7 +2,7 @@
 
 # Integrate with OmniAgent
 
-OmniAgent is an open-source, multi-model AI agent scheduling engine that runs in your terminal. It features **8 inference paradigms** (ReAct, Plan-Execute, Reflection, and 3 combined engines), **20+ built-in tools** (file editing, AST analysis, Git, MCP, web fetch), engineering reliability layers (Circuit Breaker, Budget Manager, Context Compactor), and a **MCP ecosystem** with Smithery registry browsing (7000+ servers) and a 28-skill library.
+OmniAgent is an open-source, multi-model AI agent scheduling engine that runs in your terminal. It features **8 inference paradigms** (ReAct, Plan-Execute, Reflection, Direct, Novel, and 3 combined engines), **20+ built-in tools** (file editing, AST analysis, Git, MCP, web fetch), engineering reliability layers (Circuit Breaker, Budget Manager, Context Compactor), and a **MCP ecosystem** with Smithery registry browsing (7000+ servers) and a 28-skill library.
 
 #### 1. Install OmniAgent
 
@@ -47,7 +47,7 @@ providers:
 
 Get your API Key from the [DeepSeek Platform](https://platform.deepseek.com/api_keys).
 
-> **1M Context Window:** OmniAgent automatically detects the 1M token context window for DeepSeek V4 models. When the token usage reaches 80%, the 6-step Compactor pipeline triggers to preserve semantically dense content.
+> **1M Context Window:** OmniAgent automatically detects the 1M token context window for DeepSeek V4 models. A tier-aware Context Compactor warns at 60% usage and auto-compacts at 85%, preserving semantically dense content with multi-segment structured summaries.
 
 > **Max Thinking / Reasoning Effort:** DeepSeek V4 Pro supports multiple reasoning effort levels. Pass `reasoning_effort` via the engine layer or set it in the model registry. The ReAct and Plan-Execute engines pass through reasoning parameters automatically.
 
@@ -67,12 +67,6 @@ omniagent
 ```text
 > /models          # list registered models
 > /pool            # view the 5-tier priority pool
-```
-
-- Or use the one-shot command mode:
-
-```bash
-omniagent chat -m deepseek/deepseek-v4-pro "refactor this module"
 ```
 
 - Start coding with your multi-paradigm terminal agent 🐋

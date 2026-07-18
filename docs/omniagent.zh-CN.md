@@ -2,7 +2,7 @@
 
 # 接入 OmniAgent
 
-OmniAgent 是一个开源的多模型 AI Agent 调度引擎，运行在终端内。内置 **8 种推理范式**（ReAct、Plan-Execute、Reflection 及 3 种组合引擎）、**20+ 项内建工具**（文件编辑、AST 分析、Git、MCP、网页抓取）、工程可靠性层（断路器、预算管理器、上下文压缩器），以及 **MCP 生态**（Smithery 注册中心 7000+ 服务器浏览、28 个技能库）。
+OmniAgent 是一个开源的多模型 AI Agent 调度引擎，运行在终端内。内置 **8 种推理范式**（ReAct、Plan-Execute、Reflection、Direct、Novel 及 3 种组合引擎）、**20+ 项内建工具**（文件编辑、AST 分析、Git、MCP、网页抓取）、工程可靠性层（断路器、预算管理器、上下文压缩器），以及 **MCP 生态**（Smithery 注册中心 7000+ 服务器浏览、28 个技能库）。
 
 #### 1. 安装 OmniAgent
 
@@ -47,7 +47,7 @@ providers:
 
 其中 API Key 在 [DeepSeek 开放平台](https://platform.deepseek.com/api_keys) 获取。
 
-> **100 万 Token 上下文：** OmniAgent 自动识别 DeepSeek V4 模型的 1M Token 上下文窗口。Token 用量达到 80% 时，6 步压缩流水线自动触发，保留语义最密集的内容。
+> **100 万 Token 上下文：** OmniAgent 自动识别 DeepSeek V4 模型的 1M Token 上下文窗口。分层上下文压缩器在 60% 用量时预警、85% 时自动压缩，以多段结构化摘要保留语义最密集的内容。
 
 > **Max Thinking / 推理强度：** DeepSeek V4 Pro 支持多级推理强度。通过引擎层透传 `reasoning_effort` 参数，ReAct 和 Plan-Execute 引擎自动传递推理参数。
 
@@ -67,12 +67,6 @@ omniagent
 ```text
 > /models          # 查看已注册模型
 > /pool            # 查看五级优先级调用池
-```
-
-- 或使用单行命令模式：
-
-```bash
-omniagent chat -m deepseek/deepseek-v4-pro "重构这个模块"
 ```
 
 - 开始与你的多范式终端 Agent 一起编程 🐋

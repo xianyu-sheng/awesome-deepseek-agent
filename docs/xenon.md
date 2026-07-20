@@ -8,7 +8,9 @@ Xenon is an open-source terminal AI coding agent with **8 reasoning engines**, *
 
 **🆕 DeepSeek Cache Tracker** — Xenon ships with a built-in cache hit rate tracker for DeepSeek API. A three-layer monitoring system (real-time toolbar → `/cost` panel → exit savings report) shows your cache hit rate, estimated cost, and total savings — all computed locally from the API response `usage` fields, **zero extra LLM cost**. Full guide: [DeepSeek Cache Best Practices](https://github.com/xianyu-sheng/Xenon/blob/main/docs/deepseek-guide.md)
 
-It also features **8 inference paradigms** (ReAct, Plan-Execute, Reflection, Direct, Novel, and 3 combined engines), **20+ built-in tools** (file editing, AST analysis, Git, MCP, web fetch), engineering reliability layers (Circuit Breaker, Budget Manager, Context Compactor), and a **MCP ecosystem** with Smithery registry browsing (7000+ servers) and a 28-skill library.
+It also features **8 inference paradigms** (ReAct, Plan-Execute, Reflection, Direct, Novel, and 3 combined engines), **20+ built-in tools** (file editing, AST analysis, Git, MCP, web fetch), engineering reliability layers (Circuit Breaker, Budget Manager, Context Compactor), a **MCP ecosystem** with Smithery registry browsing (7000+ servers) and a 28-skill library, and a **Vision Bridge** that gives DeepSeek multimodal capabilities by routing images through lightweight vision models in the model pool — all lazy-loaded on first hotkey press (Ctrl+Alt+V).
+
+> 🆕 **[Vision Bridge](./docs/xenon.md#vision-bridge)**: Press Ctrl+Alt+V to paste an image — Xenon routes it through a lightweight multimodal model (e.g., GPT-4o-mini, Claude Haiku, Gemini Flash, doubao-vision) which transcribes it to text, then DeepSeek performs the actual reasoning. Zero external API dependency — reuses your existing model pool credentials.
 
 #### 1. Install Xenon
 

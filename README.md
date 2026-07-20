@@ -37,7 +37,7 @@ Each guide walks through installation, configuration, and first run — so you c
 | **Qwen Code** | Coding agent CLI by the Alibaba Qwen team — now with built-in DeepSeek provider support. | [Guide](./docs/qwen_code.md) |
 | **Reasonix**    | DeepSeek-native coding agent that runs in the terminal — cache-first loop, MCP-native.                      | [Guide](./docs/reasonix.md)    |
 | **WorkBuddy/CodeBuddy** | AI agent and coding assistant with custom OpenAI-compatible model configuration. | [Guide](./docs/workbuddy.md) |
-| **Xenon** | Open-source terminal AI coding agent with 8 reasoning engines, DeepSeek cache optimization, MCP protocol, and Smithery integration. | [Guide](./docs/xenon.md) |
+| **Xenon** | Open-source terminal AI coding agent with 8 reasoning engines, DeepSeek cache optimization + Vision Bridge (multimodal via model pool), MCP protocol, and Smithery integration. | [Guide](./docs/xenon.md) |
 
 ## Resources
 

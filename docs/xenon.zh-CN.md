@@ -8,7 +8,9 @@ Xenon 是一个开源终端 AI 编程 Agent，内置 **8 种推理引擎**、**D
 
 **🆕 DeepSeek 缓存追踪器** — Xenon 内置 DeepSeek API 缓存命中率追踪系统。三层监控（实时 toolbar → `/cost` 面板 → 退出省钱报告）展示缓存命中率、预估费用和总节省——全部基于 API 返回值 `usage` 字段 + 本地定价表本地计算，**零额外 LLM 消费**。完整指南：[DeepSeek 缓存最佳实践](https://github.com/xianyu-sheng/Xenon/blob/main/docs/deepseek-guide.md)
 
-内置 **8 种推理范式**（ReAct、Plan-Execute、Reflection、Direct、Novel 及 3 种组合引擎）、**20+ 项内建工具**（文件编辑、AST 分析、Git、MCP、网页抓取）、工程可靠性层（断路器、预算管理器、上下文压缩器），以及 **MCP 生态**（Smithery 注册中心 7000+ 服务器浏览、28 个技能库）。
+内置 **8 种推理范式**（ReAct、Plan-Execute、Reflection、Direct、Novel 及 3 种组合引擎）、**20+ 项内建工具**（文件编辑、AST 分析、Git、MCP、网页抓取）、工程可靠性层（断路器、预算管理器、上下文压缩器）、**MCP 生态**（Smithery 注册中心 7000+ 服务器浏览、28 个技能库）以及 **视觉桥接器**——通过模型池中的轻量多模态模型为 DeepSeek 提供"眼睛"，按 Ctrl+Alt+V 粘贴图片即可转录为文字，全部惰性加载。
+
+> 🆕 **[视觉桥接器](./docs/xenon.zh-CN.md#视觉桥接器)**: 按 Ctrl+Alt+V 粘贴图片 → Xenon 调用模型池中的轻量多模态模型（如 GPT-4o-mini、Claude Haiku、Gemini Flash、doubao-vision）转录为文字 → DeepSeek 基于文字描述进行深度推理。零外部依赖，复用现有模型池 Key。
 
 #### 1. 安装 Xenon
 

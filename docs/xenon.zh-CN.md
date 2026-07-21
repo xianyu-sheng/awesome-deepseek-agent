@@ -2,78 +2,72 @@
 
 # 接入 Xenon
 
-Xenon 是一个开源终端 AI 编程 Agent，内置 **8 种推理引擎**、**DeepSeek 缓存优化**、MCP 协议及 Smithery 集成。
+[Xenon](https://github.com/xianyu-sheng/Xenon) 是一个开源终端 AI 编程 Agent，支持 DeepSeek V4 模型发现、可配置推理强度、原生工具调用、缓存与费用观测、工具权限控制、MCP 服务以及八种执行引擎。
 
-- **GitHub：** <https://github.com/xianyu-sheng/Xenon>
+## 1. 安装
 
-**🆕 DeepSeek 缓存追踪器** — Xenon 内置 DeepSeek API 缓存命中率追踪系统。三层监控（实时 toolbar → `/cost` 面板 → 退出省钱报告）展示缓存命中率、预估费用和总节省——全部基于 API 返回值 `usage` 字段 + 本地定价表本地计算，**零额外 LLM 消费**。完整指南：[DeepSeek 缓存最佳实践](https://github.com/xianyu-sheng/Xenon/blob/main/docs/deepseek-guide.md)
-
-内置 **8 种推理范式**（ReAct、Plan-Execute、Reflection、Direct、Novel 及 3 种组合引擎）、**20+ 项内建工具**（文件编辑、AST 分析、Git、MCP、网页抓取）、工程可靠性层（断路器、预算管理器、上下文压缩器）、**MCP 生态**（Smithery 注册中心 7000+ 服务器浏览、28 个技能库）以及 **视觉桥接器**——通过模型池中的轻量多模态模型为 DeepSeek 提供"眼睛"，按 Ctrl+Alt+V 粘贴图片即可转录为文字，全部惰性加载。
-
-> 🆕 **[视觉桥接器](./docs/xenon.zh-CN.md#视觉桥接器)**: 按 Ctrl+Alt+V 粘贴图片 → Xenon 调用模型池中的轻量多模态模型（如 GPT-4o-mini、Claude Haiku、Gemini Flash、doubao-vision）转录为文字 → DeepSeek 基于文字描述进行深度推理。零外部依赖，复用现有模型池 Key。
-
-#### 1. 安装 Xenon
-
-- 安装 [Python 3.10+](https://www.python.org/downloads/)。
-- 在终端中执行以下命令：
+安装 Python 3.10 或更高版本，然后安装 Xenon 当前源码版本：
 
 ```bash
-git clone https://github.com/xianyu-sheng/Xenon.git
-cd Xenon
-pip install -e ".[dev]"
-```
-
-- 安装结束后，执行以下命令，若显示版本号和帮助信息则安装成功：
-
-```bash
+pip install -U "git+https://github.com/xianyu-sheng/Xenon.git"
 xenon --version
 ```
 
-#### 2. 配置 DeepSeek 供应商
+如需参与开发，可克隆仓库后使用 `-e ".[dev]"` 安装。
 
-Xenon 原生支持 DeepSeek。选择以下两种方式之一配置：
+## 2. 配置 DeepSeek
 
-**方式 A：交互式配置（推荐）**
-
-启动 Xenon 并运行配置向导：
+启动 Xenon 并打开交互式配置向导：
 
 ```text
 > /setup
 ```
 
-在供应商列表中选择 **DeepSeek**，粘贴 API Key，选择模型（`deepseek-v4-pro` / `deepseek-v4-flash`）。模型将自动加入优先级调用池。
+选择 **DeepSeek**，输入从 [DeepSeek 开放平台](https://platform.deepseek.com/api_keys) 获取的 API Key，再选择 `deepseek-v4-pro` 和/或 `deepseek-v4-flash`。Xenon 会通过供应商的 `/models` API 获取当前模型列表，并将所选模型加入故障转移池。
 
-**方式 B：直接编辑配置文件**
-
-编辑 `~/.xenon/credentials.yaml`：
+也可以直接编辑 `~/.xenon/credentials.yaml`：
 
 ```yaml
 deepseek: "sk-xxxxxxxxxxxxxxxx"
 ```
 
-其中 API Key 在 [DeepSeek 开放平台](https://platform.deepseek.com/api_keys) 获取。
+Xenon 内置的 V4 模型条目采用 100 万 Token 上下文窗口。上下文管理器会在达到配置上限前预警并压缩长对话。
 
-> **100 万 Token 上下文：** Xenon 自动识别 DeepSeek V4 模型的 1M Token 上下文窗口。分层上下文压缩器在 60% 用量时预警、85% 时自动压缩，以多段结构化摘要保留语义最密集的内容。
+### 推理强度
 
-> **Max Thinking / 推理强度：** DeepSeek V4 Pro 支持多级推理强度。通过引擎层透传 `reasoning_effort` 参数，ReAct 和 Plan-Execute 引擎自动传递推理参数。
+`deepseek-v4-pro` 默认使用 `reasoning_effort=max`。可针对单个模型修改：
 
-#### 3. 运行并选择模型
+```text
+> /set_model ds-pro deepseek/deepseek-v4-pro reasoning_effort=high
+```
 
-- 进入项目目录并执行：
+允许值为 `low`、`medium`、`high` 和 `max`。该配置会保存到模型注册表，并用于普通请求、流式请求和原生工具请求。当 API 要求强制指定 `tool_choice` 时，由于两者不兼容，Xenon 仅对该次请求关闭思考模式。
+
+## 3. 运行
 
 ```bash
-cd /path/to/my-project
+cd /path/to/project
 xenon
 ```
 
-- 按 `Shift+Tab` 切换推理范式，或输入 `/mode react` 切换。
-- **AutoRouter** 根据任务难度自动选择模型——简单查询用 `deepseek-v4-flash`，复杂任务用 `deepseek-v4-pro`。
-- 手动指定模型：
+常用命令和快捷键：
 
 ```text
-> /models          # 查看已注册模型
-> /pool            # 查看五级优先级调用池
+/models        查看已注册模型
+/model         交互式选择一个已注册模型
+/pool          查看故障转移池和模型健康状态
+/mode react    切换到 ReAct 执行引擎
+/cost          查看 Token 缓存用量和预估费用
+Shift+Tab      循环切换执行模式
+Ctrl+O         展开或折叠执行详情
 ```
 
-- 随时输入 `/cost` 查看 DeepSeek 缓存命中率和费用明细。
-- 开始与你的多范式终端 Agent 一起编程 🐋
+Xenon 会在多轮工具调用中保留 DeepSeek 原生的 `reasoning_content`、`tool_calls` 和 `tool_call_id` 消息。文件及命令工具在执行前会经过权限策略检查。
+
+## 缓存与费用观测
+
+状态栏、`/cost` 视图和退出摘要基于 API 返回的 `usage` 字段，在本地计算缓存命中率与预估费用，不会为展示数据额外发起模型请求。配置细节请参阅 [DeepSeek 缓存指南](https://github.com/xianyu-sheng/Xenon/blob/main/docs/deepseek-guide.md)。
+
+## 视觉桥接器（可选）
+
+按 `Ctrl+Alt+V` 可附加图片。当模型池中已配置的供应商支持视觉输入时，Xenon 会让该模型描述图片，再将文字描述交给 DeepSeek 推理。此功能复用已有供应商凭证，并不表示 DeepSeek 模型本身具备多模态能力。

@@ -2,78 +2,72 @@
 
 # Integrate with Xenon
 
-Xenon is an open-source terminal AI coding agent with **8 reasoning engines**, **DeepSeek cache optimization**, MCP protocol, and Smithery integration.
+[Xenon](https://github.com/xianyu-sheng/Xenon) is an open-source terminal AI coding agent. It supports DeepSeek V4 model discovery, configurable reasoning effort, native tool calling, cache and cost observability, permission-gated coding tools, MCP servers, and eight execution engines.
 
-- **GitHub:** <https://github.com/xianyu-sheng/Xenon>
+## 1. Install
 
-**🆕 DeepSeek Cache Tracker** — Xenon ships with a built-in cache hit rate tracker for DeepSeek API. A three-layer monitoring system (real-time toolbar → `/cost` panel → exit savings report) shows your cache hit rate, estimated cost, and total savings — all computed locally from the API response `usage` fields, **zero extra LLM cost**. Full guide: [DeepSeek Cache Best Practices](https://github.com/xianyu-sheng/Xenon/blob/main/docs/deepseek-guide.md)
-
-It also features **8 inference paradigms** (ReAct, Plan-Execute, Reflection, Direct, Novel, and 3 combined engines), **20+ built-in tools** (file editing, AST analysis, Git, MCP, web fetch), engineering reliability layers (Circuit Breaker, Budget Manager, Context Compactor), a **MCP ecosystem** with Smithery registry browsing (7000+ servers) and a 28-skill library, and a **Vision Bridge** that gives DeepSeek multimodal capabilities by routing images through lightweight vision models in the model pool — all lazy-loaded on first hotkey press (Ctrl+Alt+V).
-
-> 🆕 **[Vision Bridge](./docs/xenon.md#vision-bridge)**: Press Ctrl+Alt+V to paste an image — Xenon routes it through a lightweight multimodal model (e.g., GPT-4o-mini, Claude Haiku, Gemini Flash, doubao-vision) which transcribes it to text, then DeepSeek performs the actual reasoning. Zero external API dependency — reuses your existing model pool credentials.
-
-#### 1. Install Xenon
-
-- Install [Python 3.10+](https://www.python.org/downloads/).
-- Run the following commands in your terminal:
+Install Python 3.10 or newer, then install the current Xenon source release:
 
 ```bash
-git clone https://github.com/xianyu-sheng/Xenon.git
-cd Xenon
-pip install -e ".[dev]"
-```
-
-- After installation, verify with:
-
-```bash
+pip install -U "git+https://github.com/xianyu-sheng/Xenon.git"
 xenon --version
 ```
 
-#### 2. Configure DeepSeek Provider
+For development, clone the repository and install `-e ".[dev]"` instead.
 
-Xenon supports DeepSeek natively. Pick one of two ways to configure:
+## 2. Configure DeepSeek
 
-**Method A: Interactive setup (recommended)**
-
-Launch Xenon and run the setup wizard:
+Start Xenon and open the interactive setup:
 
 ```text
 > /setup
 ```
 
-Choose **DeepSeek** from the provider list, paste your API Key, and select models (`deepseek-v4-pro` / `deepseek-v4-flash`). Models are automatically added to the priority-based calling pool.
+Choose **DeepSeek**, enter an API key from the [DeepSeek Platform](https://platform.deepseek.com/api_keys), and select `deepseek-v4-pro` and/or `deepseek-v4-flash`. Xenon discovers the provider's current model list through its `/models` API and adds selected models to the fallback pool.
 
-**Method B: Direct config file**
-
-Edit `~/.xenon/credentials.yaml`:
+Credentials can also be configured in `~/.xenon/credentials.yaml`:
 
 ```yaml
 deepseek: "sk-xxxxxxxxxxxxxxxx"
 ```
 
-Get your API Key from the [DeepSeek Platform](https://platform.deepseek.com/api_keys).
+Xenon's built-in V4 entries use a 1M-token context window. Its context manager warns and compacts long conversations before the configured limit is reached.
 
-> **1M Context Window:** Xenon automatically detects the 1M token context window for DeepSeek V4 models. A tier-aware Context Compactor warns at 60% usage and auto-compacts at 85%, preserving semantically dense content with multi-segment structured summaries.
+### Reasoning effort
 
-> **Max Thinking / Reasoning Effort:** DeepSeek V4 Pro supports multiple reasoning effort levels. Pass `reasoning_effort` via the engine layer or set it in the model registry. The ReAct and Plan-Execute engines pass through reasoning parameters automatically.
+`deepseek-v4-pro` defaults to `reasoning_effort=max`. Change the value for an individual model with:
 
-#### 3. Run and Select Model
+```text
+> /set_model ds-pro deepseek/deepseek-v4-pro reasoning_effort=high
+```
 
-- Enter your project directory and execute:
+Accepted values are `low`, `medium`, `high`, and `max`. The setting is persisted in the model registry and passed through ordinary, streaming, and native-tool requests. When the API requires a forced `tool_choice`, Xenon disables thinking for that individual request because the two options are incompatible.
+
+## 3. Run
 
 ```bash
-cd /path/to/my-project
+cd /path/to/project
 xenon
 ```
 
-- Use `Shift+Tab` to cycle through inference paradigms, or type `/mode react` to switch.
-- Models are auto-selected by the **AutoRouter** based on task difficulty — simple queries use `deepseek-v4-flash`, complex tasks use `deepseek-v4-pro`.
-- To force a specific model:
+Useful commands and shortcuts:
 
 ```text
-> /models          # list registered models
-> /pool            # view the 5-tier priority pool
+/models        list registered models
+/model         select a registered model interactively
+/pool          inspect the fallback pool and model health
+/mode react    switch to the ReAct execution engine
+/cost          inspect token cache usage and estimated cost
+Shift+Tab      cycle execution modes
+Ctrl+O         expand or collapse execution details
 ```
 
-- Type `/cost` anytime to see your DeepSeek cache hit rate and cost breakdown.
-- Start coding with your multi-paradigm terminal agent 🐋
+Xenon preserves DeepSeek's native `reasoning_content`, `tool_calls`, and `tool_call_id` messages across tool rounds. File and command tools pass through its permission policy before execution.
+
+## Cache and cost observability
+
+The status bar, `/cost` view, and exit summary derive cache hit rate and estimated cost locally from API `usage` fields. This reporting does not make an additional model request. See the [DeepSeek cache guide](https://github.com/xianyu-sheng/Xenon/blob/main/docs/deepseek-guide.md) for configuration details.
+
+## Vision Bridge (optional)
+
+Press `Ctrl+Alt+V` to attach an image. When a configured provider in the model pool supports vision, Xenon asks that model to describe the image and supplies the resulting text to DeepSeek for reasoning. This reuses existing provider credentials; it does not make DeepSeek itself multimodal.

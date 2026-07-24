@@ -6,10 +6,10 @@
 
 ## 1. Install
 
-Install Python 3.10 or newer, then install the verified v0.7.0 release:
+Install Python 3.10 or newer, then install the verified v0.7.2 release:
 
 ```bash
-pip install -U "git+https://github.com/xianyu-sheng/Xenon.git@v0.7.0"
+pip install -U "git+https://github.com/xianyu-sheng/Xenon.git@v0.7.2"
 xenon --version
 ```
 
@@ -63,7 +63,7 @@ Shift+Tab      cycle execution modes
 Ctrl+O         expand or collapse execution details
 ```
 
-Xenon preserves DeepSeek's native `reasoning_content`, `tool_calls`, and `tool_call_id` messages across tool rounds. File and command tools pass through its permission policy before execution.
+Xenon preserves DeepSeek's native `reasoning_content`, `tool_calls`, and `tool_call_id` messages across tool rounds. File and command tools pass through its permission policy before execution. v0.7.2 also persists bounded, privacy-safe tool checkpoints, including concurrent Plan-Execute steps, so an interrupted session can recover without replaying state-changing work.
 
 ## Cache and cost observability
 
@@ -71,7 +71,7 @@ The status bar, `/cost` view, and exit summary derive cache hit rate and estimat
 
 ## User-governed memory
 
-Xenon v0.7.0 provides four isolated memory scopes: session, project-local,
+Xenon v0.7.2 provides four isolated memory scopes: session, project-local,
 project-shared, and user. An explicit request such as `Remember that this project
 uses Python 3.12` is saved immediately with a receipt containing its ID, scope,
 and exact local path. When Xenon itself detects reusable information, it only
@@ -81,7 +81,7 @@ the user's confirmation.
 Memory is bounded by token budgets, can be inspected with `/memory inspect`, and
 checked with `/memory doctor`. Potential conflicts are reported without silent
 overwrite; `/memory replace` and `/memory rollback` keep the change reversible.
-See the [memory system specification](https://github.com/xianyu-sheng/Xenon/blob/v0.7.0/docs/MEMORY_SYSTEM_SPEC.md) for the storage and consent model.
+See the [memory system specification](https://github.com/xianyu-sheng/Xenon/blob/v0.7.2/docs/MEMORY_SYSTEM_SPEC.md) for the storage and consent model.
 
 ## Vision Bridge (optional)
 

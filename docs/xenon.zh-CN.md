@@ -6,10 +6,10 @@
 
 ## 1. 安装
 
-安装 Python 3.10 或更高版本，然后安装已验证的 v0.7.2 版本：
+安装 Python 3.10 或更高版本，然后安装已验证的 v0.7.3 版本：
 
 ```bash
-pip install -U "git+https://github.com/xianyu-sheng/Xenon.git@v0.7.2"
+pip install -U "git+https://github.com/xianyu-sheng/Xenon.git@v0.7.3"
 xenon --version
 ```
 
@@ -58,27 +58,28 @@ xenon
 /pool          查看故障转移池和模型健康状态
 /mode react    切换到 ReAct 执行引擎
 /cost          查看 Token 缓存用量和预估费用
+/cache lanes   查看按模型隔离的追加式提示词轨道
 /memory status 查看记忆作用域、路径与容量阈值
 Shift+Tab      循环切换执行模式
 Ctrl+O         展开或折叠执行详情
 ```
 
-Xenon 会在多轮工具调用中保留 DeepSeek 原生的 `reasoning_content`、`tool_calls` 和 `tool_call_id` 消息。文件及命令工具在执行前会经过权限策略检查。v0.7.2 还会为工具执行写入有界且隐私安全的恢复点，包括并行 Plan-Execute 步骤；会话中断后可以恢复，而不会重放有状态操作。
+Xenon 会在多轮工具调用中保留 DeepSeek 原生的 `reasoning_content`、`tool_calls` 和 `tool_call_id` 消息。文件及命令工具在执行前会经过权限策略检查。v0.7.3 还会为工具执行写入有界且隐私安全的恢复点，包括并行 Plan-Execute 步骤；会话中断后可以恢复，而不会重放有状态操作。
 
 ## 缓存与费用观测
 
-状态栏、`/cost` 视图和退出摘要基于 API 返回的 `usage` 字段，在本地计算缓存命中率与预估费用，不会为展示数据额外发起模型请求。配置细节请参阅 [DeepSeek 缓存指南](https://github.com/xianyu-sheng/Xenon/blob/main/docs/deepseek-guide.md)。
+状态栏、`/cost` 视图和退出摘要基于 API 返回的 `usage` 字段，在本地计算缓存命中率与预估费用。v0.7.3 新增 Cache Rails：每个模型维护独立的追加式提示词轨道，切换模型后再次返回时不会重建该模型的稳定前缀。`/cache lanes` 提供不含提示词原文的轨道诊断，真实命中率仍以厂商 `usage` 为准；观测和缓存亲和均不会额外调用模型。详细设计与真实供应商验收见 [DeepSeek 缓存指南](https://github.com/xianyu-sheng/Xenon/blob/v0.7.3/docs/deepseek-guide.md)。
 
 ## 用户治理记忆
 
-Xenon v0.7.2 提供会话、项目本地、项目共享和用户全局四个隔离的记忆作用域。
+Xenon v0.7.3 提供会话、项目本地、项目共享和用户全局四个隔离的记忆作用域。
 用户明确说“记住这个项目使用 Python 3.12”时，Xenon 会立即保存，并回显记忆
 ID、作用域和准确的本地路径。若 Xenon 自己发现可能值得长期复用的信息，它只会
 展示候选内容、原因、作用域与保存位置；未经用户确认不会持久化。
 
 记忆受 token 阈值约束，可用 `/memory inspect` 检查、用 `/memory doctor` 诊断。
 潜在冲突只提示而不静默覆盖，`/memory replace` 与 `/memory rollback` 保证变更可逆。
-存储和授权模型详见[记忆系统规范](https://github.com/xianyu-sheng/Xenon/blob/v0.7.2/docs/MEMORY_SYSTEM_SPEC.md)。
+存储和授权模型详见[记忆系统规范](https://github.com/xianyu-sheng/Xenon/blob/v0.7.3/docs/MEMORY_SYSTEM_SPEC.md)。
 
 ## 视觉桥接器（可选）
 
